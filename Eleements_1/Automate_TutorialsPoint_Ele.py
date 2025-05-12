@@ -1,11 +1,13 @@
 import time
 
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.action_chains import ActionChains
+import requests
 import pandas as pd
 
 
@@ -90,9 +92,29 @@ Bad_Request_Link_XPath = "//a[text()='Bad Request']"
 Unauthorised_Link_XPath = "//a[text()='Unauthorized']"
 Forbidden_Link_Xpath = "//a[text()='Forbidden']"
 Not_Found_Link_Xpath = "//a[text()='Not Found']"
-Create_class_text_Xpath = "//div[@class='create']"
-Create_class_status_code_Xpath = "//div[@class='create']//b[1]"
+Create_class_response = "//div[@class='create']"
+NoContent_Link_response = "//div[@class='nocontent']"
+Moved_Link_response = "//div[@class='move']"
+Bad_Request_link_response = "//div[@class='brequest']"
+Unauthorised_link_response = "//div[@class='authorize']"
+Forbidden_link_response = "//div[@class='bidden']"
+Not_Found_link_response = "//div[@class='nfound']"
 
+############# Broken Link - Images ##################
+Broken_link_Tab_Xpath = "//a[text()=' Broken Links - Images']"
+Valid_link_Xpath = "//a[text()='Click Here for Valid Link']"
+Broken_link_Xpath = "Click Here for Broken Link"
+
+
+####### Upload and Downlaod #################
+Upload_download_Tab_Xpath = '//a[text()=" Upload and Download"]'
+Download_button_xpath = '//a[text()="Download"]'
+Upload_button_xpath = '//input[@id="uploadFile"]'
+
+############## Dynamic_ Properties ####################
+Dynamic_properties_Tab_Xpath = "//a[text()=' Dynamic Properties']"
+Color_change_button_Xpath = "//button[text()='Color Change']"
+After_5sec_button_Xpath = "//button[text()='Visible After 5 Seconds']"
 
 
 #######  Function Declaraction ####################
@@ -292,7 +314,13 @@ def Button_Verification():
 
 def Link_Verification():
     exoected_link_tab = "Links"
-
+    expected_created_link_response = "Link has responded with staus 201 and status text Created"
+    expected_NoContent_link_response = "Link has responded with staus 204 and status text No Content"
+    expected_Movelink_response = "Link has responded with staus 301 and status text Moved Permanently"
+    expected_BadRequest_response = "Link has responded with staus 400 and status text Bad Request"
+    expected_Unauthorised_response = "Link has responded with staus 401 and status text Unauthorized"
+    expected_Forbidden_response = "Link has responded with staus 403 and status text Forbidden"
+    expected_NotFound_response = "Link has responded with staus 404 and status text Not Found"
     driver.implicitly_wait(20)
     Element_button = driver.find_element(By.XPATH, Element_button_xpath)
     Element_button.click()
@@ -334,20 +362,147 @@ def Link_Verification():
             driver.close()
     time.sleep(2)
     driver.switch_to.window(driver.window_handles[0])
+    time.sleep(2)
+    time.sleep(1)
+    Created_Link = driver.find_element(By.XPATH, Created_Link_XPath)
+    Created_Link.click()
+    Actual_create_response = driver.find_element(By.XPATH,Create_class_response).text
+    if expected_created_link_response == Actual_create_response:
+        print("Successfull page landed ")
+        print("expected response ",expected_created_link_response)
+        print("Actual resp",Actual_create_response)
+    else:
+        print("Not landed o  the same text ")
+        print(Actual_create_response)
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    NoContent_Link = driver.find_element(By.XPATH, NoContent_Link_XPath)
+    NoContent_Link.click()
+    Actual_NoContent_response = driver.find_element(By.XPATH, NoContent_Link_response).text
+    if expected_NoContent_link_response == Actual_NoContent_response:
+        print("Successfull No Content text is printed ")
+    else:
+        print("wrong invalid no content ")
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Moved_Link = driver.find_element(By.XPATH,Moved_Link_XPath)
+    Moved_Link.click()
+    Actual_Movelink_response = driver.find_element(By.XPATH, Moved_Link_response).text
+    if expected_Movelink_response == Actual_Movelink_response:
+        print("Succesfull Move link content is printed")
+    else:
+        print("wrong invalid move link response ")
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Bad_Request_Link = driver.find_element(By.XPATH, Bad_Request_Link_XPath)
+    Bad_Request_Link.click()
+    Actual_BadRequest_response = driver.find_element(By.XPATH, Bad_Request_link_response).text
+    if expected_BadRequest_response == Actual_BadRequest_response:
+        print("Succesfull BadRequest_response content is printed")
+    else:
+        print("wrong and invalid Bad Request response is printed")
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Unauthorised_Link = driver.find_element(By.XPATH, Unauthorised_Link_XPath)
+    Unauthorised_Link.click()
+    Actual_Unauthorised_response = driver.find_element(By.XPATH, Unauthorised_link_response).text
+    if expected_Unauthorised_response == Actual_Unauthorised_response:
+        print("Succesfull Unauthorised_response content is printed")
+    else:
+        print("wrong and invalid Unauthorised_response  is printed")
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Forbidden_Link = driver.find_element(By.XPATH,Forbidden_Link_Xpath)
+    Forbidden_Link.click()
+    Actual_Forbidden_Link_response = driver.find_element(By.XPATH, Forbidden_link_response).text
+    if expected_Forbidden_response == Actual_Forbidden_Link_response:
+        print("Succesfull Forbidden_Lin content is printed")
+    else:
+        print("wrong and invalid Forbidden_Lin  is printed")
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Not_Found_Link = driver.find_element(By.XPATH, Not_Found_Link_Xpath)
+    Not_Found_Link.click()
+    Actual_Not_Found_Link_response = driver.find_element(By.XPATH, Not_Found_link_response).text
+    if expected_NotFound_response == Actual_Not_Found_Link_response:
+        print("Succesfull Not_Found_Link content is printed")
+    else:
+        print("wrong and invalid Not_Found_Link  is printed")
+
+def BrokenLink_Verification():
+    time.sleep(1)
+    driver.implicitly_wait(20)
+    Element_button = driver.find_element(By.XPATH, Element_button_xpath)
+    Element_button.click()
+    time.sleep(2)
+    Broken_link_Tab = driver.find_element(By.XPATH, Broken_link_Tab_Xpath)
+    Broken_link_Tab.click()
+    all_links = driver.find_elements(By.TAG_NAME, 'a')
+    for link in all_links:
+        href = link.get_attribute('href')
+        response = requests.get(href)
+        if response.status_code >= 400:
+            print(f"Broken Link:{href}(Status Code: {response.status_code})")
+    time.sleep(1)
+
+def Upload_and_Download():
+    time.sleep(1)
+    driver.implicitly_wait(20)
+    driver.implicitly_wait(20)
+    Element_button = driver.find_element(By.XPATH, Element_button_xpath)
+    Element_button.click()
+    time.sleep(1)
+    Upload_download_Tab = driver.find_element(By.XPATH,Upload_download_Tab_Xpath)
+    Upload_download_Tab.click()
+    time.sleep(1)
+    driver.implicitly_wait(20)
+    Download_button = driver.find_element(By.XPATH,Download_button_xpath)
+    Download_button.click()
+    driver.implicitly_wait(20)
+    time.sleep(1)
+    Upload_button = driver.find_element(By.XPATH, Upload_button_xpath)
+    Upload_button.click()
+    time.sleep(1)
+
+def Dynamic_Properties():
+    # time.sleep(1)
+    driver.implicitly_wait(20)
+    Element_button = driver.find_element(By.XPATH, Element_button_xpath)
+    Element_button.click()
+    # time.sleep(1)
+    driver.implicitly_wait(20)
+    Dynamic_properties_Tab = driver.find_element(By.XPATH, Dynamic_properties_Tab_Xpath)
+    Dynamic_properties_Tab.click()
+    driver.implicitly_wait(20)
+    # time.sleep(1)
+    color_change_button = driver.find_element(By.XPATH, Color_change_button_Xpath)
+    color_change_button.click()
+    time.sleep(5)
+    After_5sec_button = driver.find_element(By.XPATH, After_5sec_button_Xpath)
+    After_5sec_button.click()
+    print("Successfully completed")
+
+
+
 
 ############ Main Function Creation and calling ########################
 if __name__=="__main__":
-    # textbox_verification()
-    # time.sleep(5)
-    # checkbox_verification()
-    # time.sleep(5)
-    # RadioButton_Verification()
-    # time.sleep(5)
-    # WebTable_Verification()
-    # time.sleep(5)
-    # Button_Verification()
-    # time.sleep(5)
+    textbox_verification()
+    time.sleep(5)
+    checkbox_verification()
+    time.sleep(5)
+    RadioButton_Verification()
+    time.sleep(5)
+    WebTable_Verification()
+    time.sleep(5)
+    Button_Verification()
+    time.sleep(5)
     Link_Verification()
     time.sleep(5)
+    BrokenLink_Verification()
+    time.sleep(5)
+    # Upload_and_Download()
+    Dynamic_Properties()
+    time.sleep(2)
     driver.quit()
 
